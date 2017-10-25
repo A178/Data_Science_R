@@ -131,10 +131,18 @@ new.test$Fare[is.na(new.test$Fare)] <- 14.4542
 
 new.test$Survived[which(new.test$Survived == "None")] <- NA
 #now building the actual predictive model
-survived.equation <- "Survived ~ Pclass + Sex + Age + SibSp + Parch + Fare + Embarked"
-#loading the randomForest package
 
+
+#loading the randomForest package
+new.train$Survived <- droplevels(new.train$Survived)
 library("randomForest")
+survived.equation <- "Survived ~ Pclass + Sex + Age + SibSp + Parch + Fare + Embarked"
 survived.formula <- as.formula(survived.equation)
 
  titanic.model<- randomForest(formula = survived.formula, data = new.train, ntree= 500, mtry =3 , nodesize = 0.01*nrow(new.test))
+features.equation <- " Pclass + Sex + Age + SibSp + Parch + Fare + Embarked"
+survived <- predict(titanic.model,newdata = new.test)
+passengerid <-new.test$PassengerId
+survived
+output.df <- as.data.frame(passengerid)
+output.df$survived <- survived
